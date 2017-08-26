@@ -98,4 +98,4 @@ for album in album_dict['albums']:
 
 
 with open('.\Rush_Data_JSON.json', 'wb') as outfile:
-    outfile.write()
+    outfile.write(album_dict)
