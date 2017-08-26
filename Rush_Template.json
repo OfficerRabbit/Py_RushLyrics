@@ -1,0 +1,14 @@
+{	'albums': {
+		'album name': '' 
+	,	'album year': '' 
+	,	'song number': ''
+	,	'songs' : [
+			{	
+				'song name': ''
+			,	'song lyrics': ""
+			}
+		]
+	}
+}
+
+
