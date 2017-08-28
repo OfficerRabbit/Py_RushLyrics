@@ -49,3 +49,5 @@ for tones in tonec:
         tone_score_dict[current_tones_cat][name] = val
         print("\t" + score_type['tone_name'] + ': ' + str(score_type['score']))
 
+
+# for song_info in rush_json['albums']['songs']:
