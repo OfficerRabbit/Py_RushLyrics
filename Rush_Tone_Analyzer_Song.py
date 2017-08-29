@@ -15,20 +15,35 @@ tone_analyzer = ToneAnalyzerV3(
 rush_album_data = open('.\Rush_Album_Lyrics.json', 'r').read()
 rush_json = json.loads(rush_album_data)
 
-song_info_fmw = rush_json['albums']['songs'][0]
-song_name = song_info_fmw['song name']
-fmw_lyrics = song_info_fmw['song lyrics']
-rush_song_tone = tone_analyzer.tone(fmw_lyrics, content_type='text/html')
-songc = rush_song_tone['document_tone']['tone_categories']
-song_score_dict = {}
+song_album_score = {}
 
-for songs in songc:
-    song_score_dict[songs['category_name']] = {}
-    print(songs['category_name'])
-    current_songs_cat = songs['category_name']
-    for song_score_type in songs['tones']:
-        name = song_score_type['tone_name']
-        val = song_score_type['score']
-        song_score_dict[current_songs_cat][name] = val
-        print("\t" + song_score_type['tone_name'] + ': ' + str(song_score_type['score']))
+all_lyrics = ''
 
+for idx, val in enumerate(rush_json['albums']['songs']):
+    song_info = rush_json['albums']['songs'][idx]
+    song_name = song_info['song name']
+    song_lyrics = song_info['song lyrics']
+    rush_song_tone = tone_analyzer.tone(song_lyrics, content_type='text/html')
+    songc = rush_song_tone['document_tone']['tone_categories']
+    all_lyrics = all_lyrics + song_lyrics
+    
+    song_score_dict = {}
+    print(song_name)
+    
+    for songs in songc:
+        song_score_dict[songs['category_name']] = {}
+        print("\t" + songs['category_name'])
+        current_songs_cat = songs['category_name']
+        for song_score_type in songs['tones']:
+            name = song_score_type['tone_name']
+            val = song_score_type['score']
+            song_score_dict[current_songs_cat][name] = val
+            print("\t\t" + song_score_type['tone_name'] + ': ' + str(song_score_type['score']))
+
+    rush_json['albums']['songs'][idx]['song analysis'] = song_score_dict
+    
+
+with open('.\Rush_Album_Analysis_JSON.json', 'w') as outfile:
+    outfile.write(json.dumps(rush_json))
+
+outfile.close()
