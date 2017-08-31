@@ -20,7 +20,7 @@ def clean_lyrics(track_lyrics, track):
             #print(track['track_lyrics'])
             clean_status =+ True
         else:
-            print(track['track_lyrics'])
+            #print(track['track_lyrics'])
             clean_status =+ False
     except TypeError:
             pass
@@ -54,6 +54,23 @@ def clean_lyrics(track_lyrics, track):
                   "1. (0:45) ",
                   "2. (1:34) ",
                   "3. (3:05) ",
+                  # Hemispheres
+                  "I. Prelude (4:27)",
+                  "II. Apollo: Bringer of Wisdom (2:35) ",
+                  "III. Dionysus: Bringer of Love (2:05) ",
+                  "IV. Armageddon: The Battle of Heart and Mind (3:06) ",
+                  "V. Cygnus: Bringer of Balance (4:50) ",
+                  "VI. The Sphere: A Kind of Dream (1:05) ",
+                  # Permanent Waves
+                  "I. Tide Pools (2:21) ",
+                  "II. Hyperspace (2:47) ",
+                  "III. Permanent Waves (4:08) ",
+                  # Moving Pictures
+                  "I. ",
+                  "II. ",
+                  # No much to clean in the later albums!
+                  # Clockwork Angels
+                  " * Proverbs 3:5 [and In-N-Out milkshake!]. ",
                   ]
 
     try:
@@ -63,7 +80,7 @@ def clean_lyrics(track_lyrics, track):
                 new_lyrics = track['track_lyrics'].replace(clean_item, '')
                 track['track_lyrics'] = new_lyrics.lstrip().rstrip()
                 print("Item Cleaned:\t" + clean_item)
-                print(track['track_lyrics'])
+                #print(track['track_lyrics'])
                 clean_status =+ True
             else:
                 clean_status =+ False
@@ -72,38 +89,63 @@ def clean_lyrics(track_lyrics, track):
         pass
 
     if clean_status == 1:
-        clean_status = True
+        clean_status = "Lyrics Cleaned"
     else:
-        clean_status = False
+        clean_status = "No Lyrics Cleaned"
     return clean_status
 
 
-clean_album_list = []
+# Cleaning the time tracks of Rush album, using regex!
+def clean_time(track_time, track):
+    # Check for non-timey wimey looking characters in string
+    if re.search('[a-zA-Z(),"*]', track_time):
+        new_time = re.sub('[a-zA-Z(),"*]', '', track_time).rstrip().lstrip()
+        print("\nCleaning Time Length")
+        print("Old Track Time:\t" + track_time)
+        print("New Track Time:\t" + new_time)
+        track['track_length'] = new_time        
+    else:
+        pass
+    
 
 # For every album in the rush_album_data file...
 for idx, album in enumerate(rush_album_data['albums']):
     # Tester so I can work out the single run before making the loop
-    
-    if idx == 5:
+
+    # Had the extra indent when doing testing, now when I delete I get tab/space
+    # error so I'm keeping this here to clean up. Now or never, I no
+    if idx == idx:
+        print("*" * 80)
         print("\nAlbum Name:\t" + album['album name'])
         # For every track in the album info...
         for idx, track in enumerate(album['album info']):
-            print("\nTrack Number:\t" + track['track_number'])
-            print("Track Title:\t" + track['track_title'])
-            print("Track Length:\t" + track['track_length'])
-            print("Track Lyrics:")
-            clean_status = clean_lyrics(track['track_lyrics'], track)
-            print("Clean Status:\t" + str(clean_status))
-            clean_album_list.append(clean_status)
-            #print(track['track_lyrics'] + "\n")
+            try:
+                # Print the information all purdy like
+                # Clean up lyrics and times that have extraneous characters
+                print("\n" + "*" * 40)
+                clean_status = clean_lyrics(track['track_lyrics'], track)
+                clean_time(track['track_length'], track)
+                
+                print("\nTrack Number:\t" + track['track_number'])
+                print("Track Title:\t" + track['track_title'])
+                print("Track Length:\t" + track['track_length'])
+                print("Track Lyrics:")
+                try:
+                    print(track['track_lyrics'] + "\n")
+                except TypeError:
+                    print("\tInstrumental")
+                
+                print("Clean Status:\t" + str(clean_status))
+            except TypeError:
+                pass
+            
+        print("\n" + "*" * 80)            
     else:
         pass
 
-"""
-print(clean_album_list)
 
-if True in clean_album_list:
-    print("*****\tStill Needs Cleaning\t*****")
-else:
-    print("*****\tAll Clean!!!\t*****")
-"""
+# Write the new clean data to a clean file
+with open('.\Rush_Full_Album_Data_Clean_JSON.json', 'w') as outfile:
+    outfile.write(json.dumps(rush_album_data))
+
+outfile.close()
