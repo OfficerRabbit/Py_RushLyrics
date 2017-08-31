@@ -4,7 +4,7 @@ import json
 
 
 url = "https://gateway.watsonplatform.net/tone-analyzer/api"
-user_name = "6ee1a2e8-9d91-48d0-ba4d-629ac0180ddf"
+user_name = open('..\PyPass\PyUser\IBMWatson_API_User.txt', 'r').read()
 pass_word = open('..\PyPass\PyKey\IBMWatson_API_Key.txt', 'r').read()
 accept_type = "Content-type: application/json"
 
